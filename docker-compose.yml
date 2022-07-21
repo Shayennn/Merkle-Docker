@@ -1,60 +1,47 @@
 version: "3.8"
 
 services:
-
-  pgsql:
-    build: ./pgsql
-    env_file:
-      - .env
+  redis:
+    image: redis:7.0.2-alpine3.16
 
   web:
-    build:
-      context: ./backend
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.4
     command: gunicorn Backend.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - .env
     depends_on:
       - redis
-      - pgsql
 
   celery-beat:
-    build:
-      context: ./backend
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.4
     command: celery -A Backend beat
     stop_grace_period: 30s
     env_file:
       - .env
     depends_on:
       - redis
-      - pgsql
 
   celery-worker:
-    build:
-      context: ./backend
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.4
     command: celery -A Backend worker -l info
     stop_grace_period: 30s
     env_file:
       - .env
     depends_on:
       - redis
-      - pgsql
-
-  redis:
-    image: redis:7.0.2-alpine3.16
 
   nginx:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.nginx
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-nginx:v0.0.4
     ports:
       - 8000:80
     depends_on:
       - web
 
   frontend:
-    build:
-      context: ./frontend
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-frontend:v0.0.9
     ports:
       - 80:80
-    env_file:
-      - .env
+    volumes:
+      - ./config.js:/usr/share/nginx/html/config.js
+    depends_on:
+      - nginx
