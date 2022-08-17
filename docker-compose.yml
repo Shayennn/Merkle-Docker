@@ -7,9 +7,10 @@ services:
   web:
     logging:
       driver: gcplogs
-      labels:
-        - MKT-UAT-WEB
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
+      options:
+        labels:
+          - MKT-UAT-WEB
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal-359611/main/mkt-backend:v0.0.2-dev.0
     command: gunicorn Backend.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - .env
@@ -19,9 +20,10 @@ services:
   celery-beat:
     logging:
       driver: gcplogs
-      labels:
-        - MKT-UAT-CELERY-BEAT
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
+      options:
+        labels:
+          - MKT-UAT-CELERY-BEAT
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal-359611/main/mkt-backend:v0.0.2-dev.0
     command: celery -A Backend beat
     stop_grace_period: 30s
     env_file:
@@ -32,9 +34,10 @@ services:
   celery-worker:
     logging:
       driver: gcplogs
-      labels:
-        - MKT-UAT-CELERY-WORKER
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
+      options:
+        labels:
+          - MKT-UAT-CELERY-WORKER
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal-359611/main/mkt-backend:v0.0.2-dev.0
     command: celery -A Backend worker -l info
     stop_grace_period: 30s
     env_file:
@@ -45,9 +48,10 @@ services:
   backend:
     logging:
       driver: gcplogs
-      labels:
-        - MKT-UAT-BACKEND
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-nginx:v0.0.0
+      options:
+        labels:
+          - MKT-UAT-BACKEND
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal-359611/main/mkt-nginx:v0.0.2-dev.0
     ports:
       - 8000:80
     depends_on:
@@ -56,9 +60,10 @@ services:
   frontend:
     logging:
       driver: gcplogs
-      labels:
-        - MKT-UAT-FRONTEND
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-frontend:v0.0.0
+      options:
+        labels:
+          - MKT-UAT-FRONTEND
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal-359611/main/mkt-frontend:v0.0.2-dev.0
     ports:
       - 80:80
     volumes:
