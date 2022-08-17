@@ -5,7 +5,7 @@ services:
     image: redis:7.0.2-alpine3.16
 
   web:
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.4
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
     command: gunicorn Backend.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - .env
@@ -13,7 +13,7 @@ services:
       - redis
 
   celery-beat:
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.4
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
     command: celery -A Backend beat
     stop_grace_period: 30s
     env_file:
@@ -22,7 +22,7 @@ services:
       - redis
 
   celery-worker:
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.4
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
     command: celery -A Backend worker -l info
     stop_grace_period: 30s
     env_file:
@@ -30,18 +30,18 @@ services:
     depends_on:
       - redis
 
-  nginx:
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-nginx:v0.0.4
+  backend:
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-nginx:v0.0.0
     ports:
       - 8000:80
     depends_on:
       - web
 
   frontend:
-    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-frontend:v0.0.9
+    image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-frontend:v0.0.0
     ports:
       - 80:80
     volumes:
       - ./config.js:/usr/share/nginx/html/config.js
     depends_on:
-      - nginx
+      - backend
