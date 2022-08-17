@@ -5,6 +5,10 @@ services:
     image: redis:7.0.2-alpine3.16
 
   web:
+    logging:
+      driver: gcplogs
+      labels:
+        - MKT-UAT-WEB
     image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
     command: gunicorn Backend.wsgi:application --bind 0.0.0.0:8000
     env_file:
@@ -13,6 +17,10 @@ services:
       - redis
 
   celery-beat:
+    logging:
+      driver: gcplogs
+      labels:
+        - MKT-UAT-CELERY-BEAT
     image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
     command: celery -A Backend beat
     stop_grace_period: 30s
@@ -22,6 +30,10 @@ services:
       - redis
 
   celery-worker:
+    logging:
+      driver: gcplogs
+      labels:
+        - MKT-UAT-CELERY-WORKER
     image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-backend:v0.0.0
     command: celery -A Backend worker -l info
     stop_grace_period: 30s
@@ -31,6 +43,10 @@ services:
       - redis
 
   backend:
+    logging:
+      driver: gcplogs
+      labels:
+        - MKT-UAT-BACKEND
     image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-nginx:v0.0.0
     ports:
       - 8000:80
@@ -38,6 +54,10 @@ services:
       - web
 
   frontend:
+    logging:
+      driver: gcplogs
+      labels:
+        - MKT-UAT-FRONTEND
     image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal/main/mkt-frontend:v0.0.0
     ports:
       - 80:80
