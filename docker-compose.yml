@@ -61,7 +61,10 @@ services:
     image: asia-southeast1-docker.pkg.dev/merkle-trading-terminal-359611/main/mkt-frontend:v0.0.2-dev.0
     ports:
       - 80:80
+      - 443:443
     volumes:
       - ./config.js:/usr/share/nginx/html/config.js
+      - ./ssl.crt:/usr/nginx/ssl.crt
+      - ./ssl.key:/usr/nginx/ssl.key
     depends_on:
       - backend

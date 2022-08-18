@@ -4,3 +4,6 @@
 
 # service-account file
 *.json
+
+*.crt
+*.key
