@@ -14,22 +14,11 @@ services:
     depends_on:
       - redis
 
-  celery-beat:
-    build:
-      context: backend
-      dockerfile: Dockerfile
-    command: celery -A Backend beat
-    stop_grace_period: 30s
-    env_file:
-      - .env
-    depends_on:
-      - redis
-
   celery-worker:
     build:
       context: backend
       dockerfile: Dockerfile
-    command: celery -A Backend worker -l info
+    command: celery -A Backend worker -B -l info
     stop_grace_period: 30s
     env_file:
       - .env
